@@ -198,7 +198,47 @@ DELETE /products/{id}
 
 - Go 1.25.6 or higher
 - SQLite3
+- **MinGW64** (required for Windows to compile SQLite driver)
 - Git
+
+### Installing MinGW64 (Windows Only)
+
+SQLite requires compilation on Windows, so you need MinGW64:
+
+**Step 1: Download MinGW64**
+
+1. Go to: https://winlibs.com/#download-release
+2. Download the latest **UCRT runtime** version (recommended: `winlibs-x86_64-posix-seh-gcc-XX.X.X-llvm-XX.X.X-mingw-w64-ucrt-release.zip`)
+
+**Step 2: Extract and Setup**
+
+1. Extract the downloaded ZIP file to a simple path (e.g., `C:\mingw64`)
+2. Add MinGW64 to Windows PATH:
+   - Open **Environment Variables** (search in Windows Start menu)
+   - Click "Environment Variables" button
+   - Under "User variables" or "System variables", click "New"
+   - Variable name: `PATH`
+   - Variable value: `C:\mingw64\bin` (or wherever you extracted it)
+   - Click OK and restart your terminal
+
+**Step 3: Verify Installation**
+
+```bash
+gcc --version
+g++ --version
+```
+
+You should see version information for both commands.
+
+### Installing Go
+
+1. Download from: https://golang.org/dl/
+2. Install Go 1.25.6 or higher
+3. Verify installation:
+
+```bash
+go version
+```
 
 ### Installation
 
@@ -209,27 +249,40 @@ git clone https://github.com/yourusername/gocrud.git
 cd gocrud
 ```
 
-2. **Install dependencies**:
+2. **Install dependencies** (MinGW64 must be installed first):
 
 ```bash
 go mod download
 ```
 
+This will compile the `go-sqlite3` driver using MinGW64's `gcc`.
+
 3. **Build the application**:
 
+For Windows (with CGO enabled):
+
 ```bash
-go build -o gocrud
+set CGO_ENABLED=1
+go build -o gocrud.exe
 ```
+
+For Linux/Mac:
+
+```bash
+CGO_ENABLED=1 go build -o gocrud
+```
+
+**Note**: `CGO_ENABLED=1` is required because GORM uses SQLite which needs C bindings (cgo) to compile.
 
 ## Running the Application
 
 ### Prerequisites Check
 
-Before running, make sure you have:
+Before running, make sure you have all prerequisites installed:
 
 ```bash
-go version  # Should be Go 1.25.6 or higher
-sqlite3 --version  # Should be installed
+go version        # Should be Go 1.25.6 or higher
+gcc --version     # MinGW64 - Should show GCC version
 ```
 
 ### Quick Start (3 Steps)
@@ -243,13 +296,25 @@ cd c:\Users\Bootrix\Documents\Bootrix\Learn\gocrud
 **Step 2: Install dependencies** (first time only)
 
 ```bash
+set CGO_ENABLED=1
 go mod download
 ```
 
 **Step 3: Run the application**
 
+**Option A: Direct run with CGO enabled**
+
 ```bash
+set CGO_ENABLED=1
 go run main.go
+```
+
+**Option B: Build then run**
+
+```bash
+set CGO_ENABLED=1
+go build -o gocrud.exe
+./gocrud.exe
 ```
 
 **Expected Output**:
@@ -306,18 +371,48 @@ http://localhost:8080/products
 If you want to create an executable file:
 
 ```bash
-# Build the executable
+# Windows - Build the executable with CGO enabled
+set CGO_ENABLED=1
 go build -o gocrud.exe
 
 # Run the executable
 ./gocrud.exe
 
-# On Linux/Mac
-go build -o gocrud
+# Linux/Mac - Build the executable
+CGO_ENABLED=1 go build -o gocrud
 ./gocrud
 ```
 
 The executable will create a SQLite database file (`gocrud.db`) in the same directory.
+
+## Environment Variables
+
+### CGO_ENABLED
+
+**Purpose**: Enables C bindings (cgo) which is required for SQLite compilation.
+
+- When using GORM with SQLite, you **must** set `CGO_ENABLED=1`
+- This allows Go to use C libraries (in this case, SQLite)
+- Without this, you'll get compilation errors related to SQLite
+
+**Setting CGO_ENABLED:**
+
+Windows (Command Prompt):
+```bash
+set CGO_ENABLED=1
+go build
+```
+
+Windows (PowerShell):
+```powershell
+$env:CGO_ENABLED = "1"
+go build
+```
+
+Linux/Mac:
+```bash
+CGO_ENABLED=1 go build
+```
 
 ## Example Usage
 
@@ -376,6 +471,33 @@ curl -X DELETE http://localhost:8080/products/550e8400-e29b-41d4-a716-4466554400
 
 ## Troubleshooting
 
+### MinGW64 Not Found (Windows)
+
+If you get error like `gcc: command not found`:
+
+1. Download MinGW64 from: https://winlibs.com/#download-release
+2. Extract to `C:\mingw64`
+3. Add `C:\mingw64\bin` to Windows PATH
+4. Restart your terminal/VS Code
+5. Verify with: `gcc --version`
+
+### SQLite Compilation Error
+
+If you get errors during `go mod download` or `go build`:
+
+```bash
+# Enable CGO and try again
+set CGO_ENABLED=1
+go clean -modcache
+go mod download
+go build -o gocrud.exe
+```
+
+Common error messages:
+- `gcc: command not found` → Install MinGW64
+- `cgo: not enabled` → Set `CGO_ENABLED=1`
+- Symbol errors during linking → Make sure MinGW64 is in PATH
+
 ### Port Already in Use
 
 If you get an error like "address already in use 8080":
@@ -395,7 +517,8 @@ kill -9 <PID>
 ### Dependencies Not Installing
 
 ```bash
-# Clear cache and reinstall
+# Enable CGO, clear cache and reinstall
+set CGO_ENABLED=1
 go clean -modcache
 go mod download
 ```

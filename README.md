@@ -1,7 +1,5 @@
 # GoCRUD - API Manajemen Produk
 
-## Pengenalan
-
 GoCRUD adalah REST API yang dibangun dengan Go untuk mengelola produk. Proyek ini mendemonstrasikan operasi CRUD (Create, Read, Update, Delete) dengan menggunakan **Clean Architecture** menggunakan repository pattern, service layer, dan data transfer objects (DTOs).
 
 ## Technology Stack

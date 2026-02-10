@@ -1,25 +1,25 @@
-# GoCRUD - Product Management API
+# GoCRUD - API Manajemen Produk
 
-## Overview
+## Pengenalan
 
-GoCRUD is a RESTful API built with Go for managing products. It demonstrates CRUD (Create, Read, Update, Delete) operations with a **Clean Architecture** using the repository pattern, service layer and data transfer objects (DTOs).
+GoCRUD adalah REST API yang dibangun dengan Go untuk mengelola produk. Proyek ini mendemonstrasikan operasi CRUD (Create, Read, Update, Delete) dengan menggunakan **Clean Architecture** menggunakan repository pattern, service layer, dan data transfer objects (DTOs).
 
 ## Technology Stack
 
-- **Language**: Go 1.25.6
+- **Bahasa**: Go 1.25.6
 - **Web Framework**: [Chi Router](https://github.com/go-chi/chi) - Lightweight HTTP routing
-- **Database**: SQLite with [GORM](https://gorm.io/) - Golang ORM
-- **Additional Libraries**:
-  - `google/uuid` - UUID generation
+- **Database**: SQLite dengan [GORM](https://gorm.io/) - Golang ORM
+- **Library Tambahan**:
+  - `google/uuid` - Untuk generate UUID
   - `go-sqlite3` - SQLite driver
 
-## Project Structure
+## Struktur Proyek
 
 ```
 gocrud/
-├── main.go # Application entry point
+├── main.go # Entry point aplikasi
 ├── go.mod # Go module definition
-├── README.md # Documentation
+├── README.md # Dokumentasi
 ├── core/ # Core/shared utilities
 │ ├── dto.go # Common data transfer objects
 │ └── types.go # Common types
@@ -32,10 +32,9 @@ gocrud/
 └── urls.go # Route definitions
 ```
 
-
 ## Architecture
 
-The project follows a **layered architecture** pattern:
+Proyek ini mengikuti pola **layered architecture**:
 
 ```
 HTTP Handlers
@@ -49,18 +48,17 @@ Entity (Gorm Model)
 Database (SQLite)
 ```
 
+### Layer-layer
 
-### Layers
-
-1. **Handlers** (`handlers.go`) - HTTP request/response handling
-2. **Services** (`services.go`) - Business logic and validation
+1. **Handlers** (`handlers.go`) - Menangani HTTP request/response
+2. **Services** (`services.go`) - Business logic dan validasi
 3. **Repositories** (`repositories.go`) - Database operations
 4. **Models** (`models.go`) - Database entity definitions
 5. **DTOs** (`dto.go`) - Data serialization/deserialization
 
 ## Database Schema
 
-### Products Table
+### Tabel Products
 
 | Column     | Type      | Constraints                      |
 |-----------|-----------|----------------------------------|
@@ -68,15 +66,15 @@ Database (SQLite)
 | Name      | TEXT      | Not Null                         |
 | Price     | INTEGER   | Not Null                         |
 | Stock     | INTEGER   | Not Null, Default: 0             |
-| CreatedAt | TIMESTAMP | Automatically set                |
-| UpdatedAt | TIMESTAMP | Automatically set                |
+| CreatedAt | TIMESTAMP | Otomatis diatur                  |
+| UpdatedAt | TIMESTAMP | Otomatis diatur                  |
 | DeletedAt | TIMESTAMP | Soft delete support              |
 
 ## API Endpoints
 
-All endpoints are prefixed with `/products`
+Semua endpoint dimulai dengan `/products`
 
-### List All Products
+### Daftar Semua Produk
 
 ```
 GET /products
@@ -97,7 +95,7 @@ GET /products
 ]
 ```
 
-### Get Product Detail
+### Lihat Detail Produk
 
 ```
 GET /products/{id}
@@ -124,7 +122,7 @@ GET /products/{id}
 }
 ```
 
-### Create Product
+### Buat Produk Baru
 
 ```
 POST /products
@@ -134,7 +132,7 @@ POST /products
 
 ```json
 {
-  "name": "New Product",
+  "name": "Produk Baru",
   "price": 15000,
   "stock": 10
 }
@@ -145,7 +143,7 @@ POST /products
 ```json
 {
   "id": "uuid-string",
-  "name": "New Product",
+  "name": "Produk Baru",
   "price": 15000,
   "stock": 10,
   "createdAt": "2026-02-10T00:00:00Z",
@@ -153,7 +151,7 @@ POST /products
 }
 ```
 
-### Update Product
+### Update Produk
 
 ```
 PUT /products/{id}
@@ -163,7 +161,7 @@ PUT /products/{id}
 
 ```json
 {
-  "name": "Updated Product Name",
+  "name": "Nama Produk Diperbarui",
   "price": 20000,
   "stock": 8
 }
@@ -174,7 +172,7 @@ PUT /products/{id}
 ```json
 {
   "id": "uuid-string",
-  "name": "Updated Product Name",
+  "name": "Nama Produk Diperbarui",
   "price": 20000,
   "stock": 8,
   "createdAt": "2026-02-10T00:00:00Z",
@@ -182,7 +180,7 @@ PUT /products/{id}
 }
 ```
 
-### Delete Product
+### Hapus Produk
 
 ```
 DELETE /products/{id}
@@ -190,126 +188,127 @@ DELETE /products/{id}
 
 **Response** (204 No Content):
 
-(Empty body)
+(Body kosong)
 
-## Getting Started
+## Mulai Menggunakan
 
-### Prerequisites
+### Prerequisite
 
-- Go 1.25.6 or higher
+- Go 1.25.6 atau lebih tinggi
 - SQLite3
-- **MinGW64** (required for Windows to compile SQLite driver)
+- **MinGW64** (diperlukan untuk Windows agar bisa compile SQLite driver)
 - Git
 
-### Installing MinGW64 (Windows Only)
+### Install MinGW64 (Windows Aja)
 
-SQLite requires compilation on Windows, so you need MinGW64:
+SQLite butuh di-compile di Windows, jadi kamu perlu MinGW64:
 
 **Step 1: Download MinGW64**
 
-1. Go to: https://winlibs.com/#download-release
-2. Download the latest **UCRT runtime** version (recommended: `winlibs-x86_64-posix-seh-gcc-XX.X.X-llvm-XX.X.X-mingw-w64-ucrt-release.zip`)
+1. Buka: https://winlibs.com/#download-release
+2. Download versi terbaru **UCRT runtime** (recommended: `winlibs-x86_64-posix-seh-gcc-XX.X.X-llvm-XX.X.X-mingw-w64-ucrt-release.zip`)
 
-**Step 2: Extract and Setup**
+**Step 2: Extract dan Setup**
 
-1. Extract the downloaded ZIP file to a simple path (e.g., `C:\mingw64`)
-2. Add MinGW64 to Windows PATH:
-   - Open **Environment Variables** (search in Windows Start menu)
-   - Click "Environment Variables" button
-   - Under "User variables" or "System variables", click "New"
+1. Extract ZIP file ke path yang simpel (contoh: `C:\mingw64`)
+2. Tambahkan MinGW64 ke Windows PATH:
+   - Buka **Environment Variables** (cari di Windows Start menu)
+   - Klik tombol "Environment Variables"
+   - Di bawah "User variables" atau "System variables", klik "New"
    - Variable name: `PATH`
-   - Variable value: `C:\mingw64\bin` (or wherever you extracted it)
-   - Click OK and restart your terminal
+   - Variable value: `C:\mingw64\bin` (atau path tempat kamu extract-nya)
+   - Klik OK dan restart terminal
 
-**Step 3: Verify Installation**
+**Step 3: Verifikasi Instalasi**
 
 ```bash
 gcc --version
 g++ --version
 ```
 
-You should see version information for both commands.
+Kamu seharusnya melihat informasi versi untuk kedua command tersebut.
 
-### Installing Go
+### Install Go
 
-1. Download from: https://golang.org/dl/
-2. Install Go 1.25.6 or higher
-3. Verify installation:
+1. Download dari: https://golang.org/dl/
+2. Install Go 1.25.6 atau lebih tinggi
+3. Verifikasi instalasi:
 
 ```bash
 go version
 ```
 
-### Installation
+### Instalasi
 
-1. **Clone the repository**:
+1. **Clone repository**:
 
 ```bash
 git clone https://github.com/yourusername/gocrud.git
 cd gocrud
 ```
 
-2. **Install dependencies** (MinGW64 must be installed first):
+2. **Install dependencies** (MinGW64 harus sudah diinstall):
 
 ```bash
+set CGO_ENABLED=1
 go mod download
 ```
 
-This will compile the `go-sqlite3` driver using MinGW64's `gcc`.
+Ini akan compile `go-sqlite3` driver menggunakan MinGW64's `gcc`.
 
-3. **Build the application**:
+3. **Build aplikasi**:
 
-For Windows (with CGO enabled):
+Untuk Windows (dengan CGO enabled):
 
 ```bash
 set CGO_ENABLED=1
 go build -o gocrud.exe
 ```
 
-For Linux/Mac:
+Untuk Linux/Mac:
 
 ```bash
 CGO_ENABLED=1 go build -o gocrud
 ```
 
-**Note**: `CGO_ENABLED=1` is required because GORM uses SQLite which needs C bindings (cgo) to compile.
+**Note**: `CGO_ENABLED=1` diperlukan karena GORM pakai SQLite yang butuh C bindings (cgo) untuk compile.
 
-## Running the Application
+## Menjalankan Aplikasi
 
-### Prerequisites Check
+### Cek Prerequisite
 
-Before running, make sure you have all prerequisites installed:
+Sebelum jalanin, pastikan semua prerequisite sudah terinstall:
 
 ```bash
-go version        # Should be Go 1.25.6 or higher
-gcc --version     # MinGW64 - Should show GCC version
+go version        # Harus Go 1.25.6 atau lebih tinggi
+gcc --version     # MinGW64 - Harus menunjukkan GCC version
 ```
 
-### Quick Start (3 Steps)
+### Quick Start (3 Langkah)
 
-**Step 1: Navigate to project directory**
+**Step 1: Buka folder proyek**
 
 ```bash
 cd c:\Users\Bootrix\Documents\Bootrix\Learn\gocrud
 ```
 
-**Step 2: Install dependencies** (first time only)
+**Step 2: Install dependencies** (cuma pertama kali)
 
 ```bash
 set CGO_ENABLED=1
 go mod download
 ```
 
-**Step 3: Run the application**
+**Step 3: Jalankan aplikasi**
 
-**Option A: Direct run with CGO enabled**
+**Opsi A: Jalankan langsung dengan CGO enabled**
 
 ```bash
 set CGO_ENABLED=1
 go run main.go
 ```
 
-**Option B: Build then run**
+**Opsi B: Build dulu baru jalanin**
 
 ```bash
 set CGO_ENABLED=1
@@ -324,78 +323,78 @@ Server is running on port 8080
 Press Ctrl+C to stop the server
 ```
 
-### Accessing the API
+### Akses API
 
-Once the application is running, you can access it at:
+Setelah aplikasi jalan, kamu bisa akses di:
 
 ```
 http://localhost:8080
 ```
 
-**Base URL for all endpoints**:
+**Base URL untuk semua endpoints**:
 
 ```
 http://localhost:8080/products
 ```
 
-### Port Information
+### Informasi Port
 
 - **Default Port**: `8080`
 - **Base URL**: `http://localhost:8080`
 - **API Prefix**: `/products`
 
-#### Full Endpoint Examples:
+#### Contoh endpoint lengkap:
 
-- List products: `http://localhost:8080/products`
-- Get product: `http://localhost:8080/products/abc123`
-- Create product: `POST http://localhost:8080/products`
-- Update product: `PUT http://localhost:8080/products/abc123`
-- Delete product: `DELETE http://localhost:8080/products/abc123`
+- Daftar produk: `http://localhost:8080/products`
+- Lihat produk: `http://localhost:8080/products/abc123`
+- Buat produk: `POST http://localhost:8080/products`
+- Update produk: `PUT http://localhost:8080/products/abc123`
+- Hapus produk: `DELETE http://localhost:8080/products/abc123`
 
-### Testing with Browser or Postman
+### Testing dengan Browser atau Postman
 
-**For GET requests (List & Detail)**, you can test directly in your browser:
+**Untuk GET requests (Daftar & Detail)**, kamu bisa test langsung di browser:
 
-1. Open your browser
-2. Go to: `http://localhost:8080/products`
-3. You should see a JSON response with all products
+1. Buka browser
+2. Pergi ke: `http://localhost:8080/products`
+3. Kamu akan lihat JSON response dengan semua produk
 
-**For POST, PUT, DELETE requests**, use tools like:
+**Untuk POST, PUT, DELETE requests**, pakai tools seperti:
 
 - [Postman](https://www.postman.com/) - GUI tool (recommended)
 - cURL - Command line tool
-- Insomnia - Another API testing tool
+- Insomnia - API testing tool lainnya
 
-### Building for Production
+### Build untuk Production
 
-If you want to create an executable file:
+Kalau mau buat executable file:
 
 ```bash
-# Windows - Build the executable with CGO enabled
+# Windows - Build executable dengan CGO enabled
 set CGO_ENABLED=1
 go build -o gocrud.exe
 
-# Run the executable
+# Jalanin executable
 ./gocrud.exe
 
-# Linux/Mac - Build the executable
+# Linux/Mac - Build executable
 CGO_ENABLED=1 go build -o gocrud
 ./gocrud
 ```
 
-The executable will create a SQLite database file (`gocrud.db`) in the same directory.
+Executable akan membuat SQLite database file (`gocrud.db`) di folder yang sama.
 
 ## Environment Variables
 
 ### CGO_ENABLED
 
-**Purpose**: Enables C bindings (cgo) which is required for SQLite compilation.
+**Fungsi**: Mengaktifkan C bindings (cgo) yang diperlukan untuk compile SQLite.
 
-- When using GORM with SQLite, you **must** set `CGO_ENABLED=1`
-- This allows Go to use C libraries (in this case, SQLite)
-- Without this, you'll get compilation errors related to SQLite
+- Kalau pakai GORM dengan SQLite, kamu **harus** set `CGO_ENABLED=1`
+- Ini memungkinkan Go untuk pakai C libraries (dalam hal ini SQLite)
+- Tanpa ini, kamu akan dapat error saat compile yang berkaitan dengan SQLite
 
-**Setting CGO_ENABLED:**
+**Cara set CGO_ENABLED:**
 
 Windows (Command Prompt):
 ```bash
@@ -414,11 +413,11 @@ Linux/Mac:
 CGO_ENABLED=1 go build
 ```
 
-## Example Usage
+## Contoh Penggunaan
 
-### Using cURL
+### Pakai cURL
 
-**1. Create a product**:
+**1. Buat produk**:
 
 ```bash
 curl -X POST http://localhost:8080/products \
@@ -430,83 +429,83 @@ curl -X POST http://localhost:8080/products \
   }'
 ```
 
-**2. List all products**:
+**2. Daftar semua produk**:
 
 ```bash
 curl http://localhost:8080/products
 ```
 
-**3. Get a product by ID** (replace `{id}` with actual UUID):
+**3. Lihat produk by ID** (ganti `{id}` dengan UUID asli):
 
 ```bash
 curl http://localhost:8080/products/550e8400-e29b-41d4-a716-446655440000
 ```
 
-**4. Update a product**:
+**4. Update produk**:
 
 ```bash
 curl -X PUT http://localhost:8080/products/550e8400-e29b-41d4-a716-446655440000 \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Updated Laptop",
+    "name": "Laptop Diperbarui",
     "price": 11000000,
     "stock": 3
   }'
 ```
 
-**5. Delete a product**:
+**5. Hapus produk**:
 
 ```bash
 curl -X DELETE http://localhost:8080/products/550e8400-e29b-41d4-a716-446655440000
 ```
 
-### Using Postman
+### Pakai Postman
 
-1. Open Postman
-2. Create a new request
-3. Set the method (GET, POST, PUT, DELETE)
-4. Enter the URL: `http://localhost:8080/products`
-5. For POST/PUT: Go to "Body" → Select "raw" → Choose "JSON" → Enter your JSON data
-6. Click "Send"
+1. Buka Postman
+2. Buat request baru
+3. Pilih method-nya (GET, POST, PUT, DELETE)
+4. Input URL: `http://localhost:8080/products`
+5. Untuk POST/PUT: Pergi ke "Body" → Pilih "raw" → Pilih "JSON" → Masukkin JSON data-nya
+6. Klik "Send"
 
 ## Troubleshooting
 
-### MinGW64 Not Found (Windows)
+### MinGW64 Tidak Ketemu (Windows)
 
-If you get error like `gcc: command not found`:
+Kalau dapat error seperti `gcc: command not found`:
 
-1. Download MinGW64 from: https://winlibs.com/#download-release
-2. Extract to `C:\mingw64`
-3. Add `C:\mingw64\bin` to Windows PATH
-4. Restart your terminal/VS Code
-5. Verify with: `gcc --version`
+1. Download MinGW64 dari: https://winlibs.com/#download-release
+2. Extract ke `C:\mingw64`
+3. Tambahkan `C:\mingw64\bin` ke Windows PATH
+4. Restart terminal/VS Code
+5. Verifikasi dengan: `gcc --version`
 
-### SQLite Compilation Error
+### Error SQLite Compilation
 
-If you get errors during `go mod download` or `go build`:
+Kalau dapat error saat `go mod download` atau `go build`:
 
 ```bash
-# Enable CGO and try again
+# Aktifin CGO dan coba lagi
 set CGO_ENABLED=1
 go clean -modcache
 go mod download
 go build -o gocrud.exe
 ```
 
-Common error messages:
+Pesan error umum:
 - `gcc: command not found` → Install MinGW64
 - `cgo: not enabled` → Set `CGO_ENABLED=1`
-- Symbol errors during linking → Make sure MinGW64 is in PATH
+- Symbol errors during linking → Pastikan MinGW64 ada di PATH
 
-### Port Already in Use
+### Port Sudah Terpakai
 
-If you get an error like "address already in use 8080":
+Kalau dapat error seperti "address already in use 8080":
 
 ```bash
-# Windows - Find process using port 8080
+# Windows - Cari proses yang pakai port 8080
 netstat -ano | findstr :8080
 
-# Kill the process (replace PID with actual number)
+# Kill proses-nya (ganti PID dengan angka asli)
 taskkill /PID <PID> /F
 
 # Linux/Mac
@@ -514,39 +513,40 @@ lsof -i :8080
 kill -9 <PID>
 ```
 
-### Dependencies Not Installing
+### Dependencies Tidak Terinstall
 
 ```bash
-# Enable CGO, clear cache and reinstall
+# Aktifin CGO, clear cache dan reinstall
 set CGO_ENABLED=1
 go clean -modcache
 go mod download
 ```
 
-### Database Issues
+### Masalah Database
 
-The SQLite database (`gocrud.db`) is automatically created on first run. If you need to reset it:
+SQLite database (`gocrud.db`) otomatis dibuat saat first run. Kalau mau reset:
 
 ```bash
-# Delete the database file
-rm gocrud.db  # or del gocrud.db on Windows
+# Hapus database file
+del gocrud.db  # Windows
+rm gocrud.db   # Linux/Mac
 
-# Run the application again
+# Jalanin aplikasi lagi
 go run main.go
 ```
 
 ## Error Handling
 
-The API returns standard HTTP status codes:
+API mengembalikan standard HTTP status codes:
 
 - `200 OK` - Successful GET, PUT request
 - `201 Created` - Successful POST request
 - `204 No Content` - Successful DELETE request
-- `400 Bad Request` - Invalid request body or parameters
-- `404 Not Found` - Resource not found
+- `400 Bad Request` - Invalid request body atau parameters
+- `404 Not Found` - Resource tidak ketemu
 - `500 Internal Server Error` - Server error
 
 ## License
 
-This project is open source and available under the MIT License.
+Proyek ini open source dan tersedia di bawah MIT License.
 
